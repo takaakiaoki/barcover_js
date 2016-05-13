@@ -24,51 +24,67 @@
 		<!-- 入力に応じてバーコードがアップデートされるように -->
   	<form>
 			<fieldset>
-				<label for="student_id_form">学生証番号(10桁):</label>
-				<input type="text" id="student_id_form" maxlength="10"> 
+				<label for="student_id_form">学生証番号(10桁):</label> <input type="text" id="student_id_form" value="" maxlength="10"><br>
+				<label for="student_name_form">氏名:</label><input type="text" id="student_name_form" maxlength="30">
 			</fieldset>
 		</form>
 
 		<script type="text/javascript">
-			// http://qiita.com/maruyam-a/items/cf0168f91d934b449a07			
-			// 冒頭10文字の変化のみをキャッチする.
-			var old = $('#student_id_form').val();
-			$("#student_id_barcode").barcode(
-					"abcde",
-					"code11");
-			// old = v = v.substr(0, 10);
+			var cur = {
+				barcodeval:$('#student_id_form').val(),
+				nameval:$('#student_name_form').val()
+			}
+
 			$('#student_id_form').keyup(
 					function(e) {
 						var v = $('#student_id_form').val();
-						if (old != v) {
-							old = v;
-							if ( jQuery.isNumeric(v) ){
-								renderBarcode(v);
-							} else {
-								$("#student_id_barcode").html("");
-							}
+						if (cur.barcodeval != v) {
+							cur.barcodeval = v;
+							updateCanvas();
+						}
+					});
+
+			$('#student_name_form').keyup(
+					function(e) {
+						var v = $('#student_name_form').val();
+						if (cur.nameval != v) {
+							cur.nameval = v;
+							updateCanvas();
 						}
 					});
 
 			// バーコードを描画する, 座標などを決めうち
-			function renderBarcode(v) {
+			function renderBarcode() {
 				var settings = {
 					output: "canvas",
-					fontsize: 12,
-					barwidth: 1,
+					fontSize: 12,
+					barWidth: 1,
+					barHeight: 60,
 					posX: 10,
 					posY: 10
 				}
-				clearCanvas();
+				// canvasの場合フォントメトリックの計算が行われるが, フォントそのものは変更されない
+				var ctx = $('#canvasBC').get(0).getContext('2d');
+				ctx.font = settings.fontSize + 'px sans-serif';
 				$("#canvasBC").barcode(
-						v,
-						"code11",
+						cur.barcodeval,
+						"code128",
 						settings);
+				renderName();
+			}
+
+			function renderName() {
+				var ctx = $('#canvasBC').get(0).getContext('2d');
+				ctx.font = '24px sans-serif';
+				ctx.fillStyle = '#000000';
+				ctx.strokeStyle = '#000000';
+				// ctx.TextBaseLine = "bottom";
+				ctx.fillText(cur.nameval, 10, 120, 200);
 			}
 
 			// canvas初期化
 			function clearCanvas() {
-				var canvas = $('#canvasBC').get(0);
+				var canvas= $('#canvasBC').get(0);
 				var ctx = canvas.getContext('2d');
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
 				// draw frame
@@ -79,9 +95,16 @@
 				ctx.strokeRect(0, 0, canvas.width, canvas.height);
 			}
 
-			// onload setup
-			$(function() {
+			function updateCanvas()
+			{
 					clearCanvas();
+					renderBarcode();
+					renderName();
+			}
+
+			// onload setup
+			$(document).ready(function() {
+					updateCanvas();
 				});
 		</script>
 		
