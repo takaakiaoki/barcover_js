@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<!-- for barcord generator -->
+		<script src="//code.jquery.com/jquery-latest.min.js"></script>
+		<script src="_3rdparty/Simple-jQuery-Based-Barcode-Generator-Barcode/jquery-barcode.js"></script>
+	</head>
+	<body>
+		<title>Barcover JS</title>
+		BarcoverをJavaScriptで作る?
+		<ul>
+			<li> <a href="http://www.jqueryscript.net/other/Simple-jQuery-Based-Barcode-Generator-Barcode.html">Simple-JqueRy-Based-Barcode-Generator-Barcode</a> でバーコードを表示
+			<li>Canvas内にバーコード(やそのほかのオブジェクト)を配置
+			<li> jsPDF で出力
+		</ul>
+		<hr>
+		学生章番号は10桁: 1234567890 のバーコード化 <br>
+		<div id="student_id_barcode"></div>
+		<script type="text/javascript">
+			$("#student_id_barcode").barcode(
+					"1234567890",
+					"code11");
+		</script>
+	</body>
+</html>
+<!-- references
+Simple jQuery Based Barcode Generator - Barcode
+	http://www.jqueryscript.net/other/Simple-jQuery-Based-Barcode-Generator-Barcode.html
+
+javascriptでPDF出力(日本語表示)
+	http://devlog.mitsugeek.net/entry/2014/08/21/javascript%E3%81%A7PDF%E5%87%BA%E5%8A%9B%EF%BC%88%E6%97%A5%E6%9C%AC%E8%AA%9E%E8%A1%A8%E7%A4%BA%EF%BC%89
+-->
+<!--
+vim: ts=2 sw=2 fenc=utf8 fileformat=unix
+-->
