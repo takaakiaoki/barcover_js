@@ -9,19 +9,53 @@
 	<body>
 		<title>Barcover JS</title>
 		BarcoverをJavaScriptで作る?
-		<ul>
+
+		<h2>これまで</h2>
+		<ol>
 			<li> <a href="http://www.jqueryscript.net/other/Simple-jQuery-Based-Barcode-Generator-Barcode.html">Simple-JqueRy-Based-Barcode-Generator-Barcode</a> でバーコードを表示
-			<li>Canvas内にバーコード(やそのほかのオブジェクト)を配置
+			<li> インプットフィールドの変更に合わせバーコードを変更
+		</ol>
+		<h2>これから?</h2>
+		<ol>
+			<li>Canvas内にバーコードを配置
+			<li>それ以外に必要な情報を配置
 			<li> jsPDF で出力
-		</ul>
-		<hr>
-		学生章番号は10桁: 1234567890 のバーコード化 <br>
-		<div id="student_id_barcode"></div>
+		</ol>
+		<!-- 入力に応じてバーコードがアップデートされるように -->
+  	<form>
+			<fieldset>
+				<label for="student_id_form">学生証番号(10桁):</label>
+				<input type="text" id="student_id_form" maxlength="10"> 
+			</fieldset>
+		</form>
+
 		<script type="text/javascript">
+			// http://qiita.com/maruyam-a/items/cf0168f91d934b449a07			
+			// 冒頭10文字の変化のみをキャッチする.
+			var old = $('#student_id_form').val();
 			$("#student_id_barcode").barcode(
-					"1234567890",
+					"abcde",
 					"code11");
+			// old = v = v.substr(0, 10);
+			$('#student_id_form').keyup(
+					function(e) {
+						var v = $('#student_id_form').val();
+						console.log(old, "->", v);
+						if (old != v) {
+							old = v;
+							if ( jQuery.isNumeric(v) ){
+								$("#student_id_barcode").barcode(
+										v,
+										"code11");
+							} else {
+								$("#student_id_barcode").html("");
+							}
+						}
+					});
 		</script>
+		
+		<!-- バーコード表示部 -->
+		<div id="student_id_barcode"></div>
 	</body>
 </html>
 <!-- references
