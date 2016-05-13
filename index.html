@@ -40,22 +40,55 @@
 			$('#student_id_form').keyup(
 					function(e) {
 						var v = $('#student_id_form').val();
-						console.log(old, "->", v);
 						if (old != v) {
 							old = v;
 							if ( jQuery.isNumeric(v) ){
-								$("#student_id_barcode").barcode(
-										v,
-										"code11");
+								renderBarcode(v);
 							} else {
 								$("#student_id_barcode").html("");
 							}
 						}
 					});
+
+			// バーコードを描画する, 座標などを決めうち
+			function renderBarcode(v) {
+				var settings = {
+					output: "canvas",
+					fontsize: 12,
+					barwidth: 1,
+					posX: 10,
+					posY: 10
+				}
+				clearCanvas();
+				$("#canvasBC").barcode(
+						v,
+						"code11",
+						settings);
+			}
+
+			// canvas初期化
+			function clearCanvas() {
+				var canvas = $('#canvasBC').get(0);
+				var ctx = canvas.getContext('2d');
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				// draw frame
+				ctx.lineWidth = 1;
+				ctx.lineCap = 'butt';
+				ctx.fillStyle = '#FFFFFF';
+				ctx.strokeStyle = '#000000';
+				ctx.strokeRect(0, 0, canvas.width, canvas.height);
+			}
+
+			// onload setup
+			$(function() {
+					clearCanvas();
+				});
 		</script>
 		
 		<!-- バーコード表示部 -->
-		<div id="student_id_barcode"></div>
+		<!-- A4が 210mm x 297mm 
+		     画面を 420 x 584 -->
+		<canvas id="canvasBC", width="420", height="584"></canvas>
 	</body>
 </html>
 <!-- references
